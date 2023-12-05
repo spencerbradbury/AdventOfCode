@@ -9,18 +9,24 @@ using namespace std;
 
 regex numbers("(?:Card\\s+\\d+:\\s+)?(\\d+|\\|)");
 
+vector<int> card_count(200, 0);
+
+
 int main() {
 
     ifstream file("input.txt");
     string line;
 
     int sum = 0;
+    int curr_card = 0;
 
     while (getline(file, line)) {
         smatch match;
         unordered_set<int> winning_numbers;
-        int winning_count = 0;
+        int matching = 0;
         bool in_winning_numbers = true;
+        card_count[curr_card]++;
+
         
         while (regex_search(line, match, numbers)) {
             if (match[1] == "|")
@@ -37,16 +43,25 @@ int main() {
             else{
                 if (winning_numbers.find(stoi(match[1])) != winning_numbers.end())
                 {
-                    winning_count++;
+                    matching++;
                 }
             }     
             line = match.suffix().str();   
         }
 
-        if (winning_count > 0)
+        for (int i = 0; i < matching; i++)
         {
-            sum += pow(2, winning_count-1);
+            card_count[curr_card + i + 1] += card_count[curr_card];
         }
+        curr_card++;
+    }
+
+    int temp = 1;
+    for (int num : card_count)
+    {
+        cout << "Card " << temp << ": " << num << endl;
+        sum += num;
+        temp++;
     }
 
     cout << sum << endl;
