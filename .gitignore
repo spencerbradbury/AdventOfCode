@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Challenge Inputs
+input.txt
+
+# Editor Files
+.vscode
